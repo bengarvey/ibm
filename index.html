@@ -20,76 +20,30 @@ text {
 </head>
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
+<script src="lib/Calendar.js"></script>
+<script src="lib/Event.js"></script>
 <script>
 
-  function Calendar() {
-    var alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-    var dates = [
-      {"date": '2015-01-01', visible: true},
-      {"date": '2015-01-02', visible: false},
-      {"date": '2015-01-03', visible: false},
-      {"date": '2015-01-04', visible: false},
-      {"date": '2015-01-05', visible: false}
-    ];
-
-    var width = 960,
-        height = 500;
-
-    var svg = d3.select("body").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-      .append("g")
-        .attr("transform", "translate(32," + (height / 2) + ")");
-
-    function update(data) {
-      // DATA JOIN
-      // Join new data with old elements, if any.
-      var text = svg.selectAll("text")
-          .data(data);
-
-      // UPDATE
-      // Update old elements as needed.
-      text.attr("class", "update");
-
-      // ENTER
-      // Create new elements as needed.
-      text.enter().append("text")
-          .attr("class", "enter")
-          .attr("x", function(d) { return 100; })
-          .attr("dy", ".35em")
-
-      // ENTER + UPDATE
-      // Appending to the enter selection expands the update selection to include
-      // entering elements; so, operations on the update selection after appending to
-      // the enter selection will apply to both entering and updating nodes.
-      text.text(function(d) { return d.date; })
-          .attr("opacity", function(d) { return d.visible ? 1 : 0 })
-
-      // EXIT
-      // Remove old elements as needed.
-      text.exit().remove();
-    }
-
-    this.start = function() {
-      // The initial display.
-      update(dates);
-      var index = 0;
-      // Grab a random sample of letters from the alphabet, in alphabetical order.
-      setInterval( function() {
-            dates[index].visible = false;
-            index += 1;
-            if (index >= dates.length) {
-              index = 0;
-            }
-            dates[index].visible = true;
-            update(dates);
-      }
-      , 100);
-    }
-  }
-
-  var cal = new Calendar();
+  var options = {
+    height: 960,
+    width: 500,
+    startDate: '2015/01/01',
+    endDate: '2015/06/01'
+  };
+  var cal = new Calendar(options);
+  cal();
   cal.start();
+
+  var events = new Events(options);
+  events();
+  events.start();
+  var currentDate;
+
+  setInterval( function() {
+    currentDate = cal.tick();
+    events.currentDate(currentDate);
+  }, 300);
+
 </script>
 </body>
 </html>
