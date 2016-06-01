@@ -16,33 +16,84 @@ text {
   fill: #333;
 }
 
+body {
+  margin: 0;
+}
+
+.map {
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.layer {
+  position: absolute;
+}
+
+.tile {
+  pointer-events: none;
+  position: absolute;
+  width: 256px;
+  height: 256px;
+}
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.date {
+  position: fixed;
+  bottom: 100px;
+  left: 0px;
+  z-index: 100;
+}
+
+
 </style>
 </head>
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
+<script src="data/d3.geo.tile.min.js"></script>
 <script src="lib/Calendar.js"></script>
 <script src="lib/Event.js"></script>
+<script src="lib/Map.js"></script>
 <script>
 
-  var options = {
-    height: 960,
-    width: 1000,
+  var mapOptions = {
+    height: window.innerHeight,
+    width: window.innerWidth,
     startDate: '2015/01/01',
     endDate: '2015/06/01'
   };
-  var cal = new Calendar(options);
+
+  var calOptions = {
+    height: 200,
+    width: 400,
+    startDate: '2015/01/01',
+    endDate: '2015/06/01'
+  };
+
+  var map = new Map(mapOptions);
+  map();
+
+  var cal = new Calendar(calOptions);
   cal();
   cal.start();
 
-  var events = new Events(options);
+  var events = new Events(calOptions);
   events();
   events.start();
   var currentDate;
-
   setInterval( function() {
     currentDate = cal.tick();
     events.currentDate(currentDate);
   }, 300);
+
+  function mousemoved() {
+    console.log("this is moving");
+  }
 
 </script>
 </body>
